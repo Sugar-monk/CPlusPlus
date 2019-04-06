@@ -1,0 +1,29 @@
+template<class T>
+class Unique_Ptr
+{
+public:
+	Unique_Ptr(T* ptr = nullptr) : _ptr(ptr)
+	{}
+
+	~Unique_Ptr()
+	{
+		if (_ptr)
+			delete _ptr;
+	}
+
+	Unique_Ptr& operator*()
+	{
+		return *_ptr;
+	}
+	Unique_Ptr& operator->()
+	{
+		return _ptr;
+	}
+private:
+	Unique_Ptr(Unique_Ptr<T> const &);
+	Unique_Ptr& operator=(Unique_Ptr<T> const &);
+
+	Unique_Ptr(Unique_Ptr<T> const &)=delete;
+	Unique_Ptr& operator=(Unique_Ptr<T> const &) = delete;
+	T* _ptr;
+};
