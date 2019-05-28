@@ -1,0 +1,39 @@
+/*
+struct ListNode {
+    int val;
+    struct ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};*/
+class PalindromeList {
+public:
+    bool chkPalindrome(ListNode* A) {
+        // write code here
+        if(NULL == A)
+            return true;
+        int *p = (int*)malloc(sizeof(int)*900);
+        ListNode* pCur = A;
+        int size = 0;
+        while(pCur)
+        {
+            p[size++] = pCur->val;
+            pCur = pCur->next;
+        }
+        
+        int begin = 0;
+        int end = size-1;
+        
+        while(begin < end)
+        {
+            if(p[begin] != p[end])
+            {
+                free(p);
+                return false;
+            }
+            ++begin;
+            --end;
+        }
+        
+        free(p);
+        return true;
+    }
+};
