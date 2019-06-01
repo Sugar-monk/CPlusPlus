@@ -1,0 +1,25 @@
+class Solution {
+public:
+    void push(int value) {
+        if(M.empty())
+            M.push(value);
+        if(value <= M.top())
+            M.push(value);
+        S.push(value);
+    }
+    void pop() {
+        if(M.top() >= S.top())
+            M.pop();
+        S.pop();
+    }
+    int top() {
+        return S.top();
+    }
+    int min() {
+        return M.top();
+    }
+private:
+    stack<int> S;
+    stack<int> M;
+    
+};
