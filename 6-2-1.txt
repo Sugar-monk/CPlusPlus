@@ -1,0 +1,29 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int main()
+{
+    vector<int> arr;
+    int n,count = 0;
+    while(cin >> n)
+    {
+        ++count;
+        arr.push_back(n);
+    }
+    arr.resize(count);
+    
+    int Size = arr[count-1];
+    arr.pop_back();
+    sort(arr.begin(),arr.end());
+    
+    for(int i = 0; i < Size; ++i)
+    {
+        cout << arr[i];
+        if(i<Size-1)
+            cout << " ";
+    }
+    
+    return 0;
+}
