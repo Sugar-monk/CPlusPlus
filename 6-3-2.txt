@@ -1,0 +1,22 @@
+class Solution {
+public:
+    vector<string> ret;
+    void Perm(size_t n, string str)
+    {
+        if(n == str.size()-1)
+            ret.push_back(str);
+        for(size_t i = n; i < str.size(); ++i)
+        {
+            if(i != n && str[i] == str[n])
+                continue;
+            swap(str[i], str[n]);
+            Perm(n+1, str);
+            swap(str[i], str[n]);
+        }
+    }
+    vector<string> Permutation(string str) {
+        Perm(0,str);
+        sort(ret.begin(),ret.end());
+        return ret;
+    }
+};
