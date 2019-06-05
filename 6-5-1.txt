@@ -1,0 +1,47 @@
+class Solution {
+public:
+    bool isValid(string s) {
+        if(s.empty())
+            return true;
+        stack<char> Stack;
+        
+        for(int i = 0; i < s.size(); ++i)
+        {
+            if(s[i] == '(' || s[i] == '{' || s[i] == '[')
+                Stack.push(s[i]);
+            else if(!Stack.empty())
+            {
+                switch(s[i])
+                {
+                    case '}':
+                        if(Stack.top() ==  '{')
+                            Stack.pop();
+                        else
+                            return false;
+                        break;
+                    case ']':
+                        if(Stack.top() == '[')
+                            Stack.pop();
+                        else
+                            return false;
+                        break;
+                    case ')':
+                        if(Stack.top() == '(')
+                            Stack.pop();
+                        else
+                            return false;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+                return false;
+        }
+        
+        if(Stack.empty())
+            return true;
+        else
+            return false;
+    }
+};
