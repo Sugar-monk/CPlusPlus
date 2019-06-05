@@ -1,0 +1,98 @@
+#include "queue.h"
+#include <assert.h>
+#include <iostream>
+
+void QueueInit(Queue* q)
+{
+	assert(q);
+	q->_back = nullptr;
+	q->_front = nullptr;
+
+}
+
+QNode* BuyNode(QDataType data)
+{
+	QNode* pNew = (QNode*)malloc(sizeof(QNode));
+	if (pNew == nullptr)
+	{
+		assert(0);
+		return nullptr;
+	}
+	pNew->_data = data;
+	pNew->_pNext = nullptr;
+	return pNew;
+}
+void QueuePush(Queue* q, QDataType data)
+{
+	assert(q);
+	QNode* pNew = BuyNode(data);
+	if (QueueEmpty(q))
+		q->_back = q->_front = pNew;
+	else
+	{
+		q->_back->_pNext = pNew;
+		q->_back = pNew;
+	}
+}
+void QueuePop(Queue* q)
+{
+	assert(q);
+	if (QueueEmpty(q))
+		return;
+	
+	QNode* pDel = q->_front;
+	if (pDel->_pNext == nullptr)
+	{
+		q->_back = q->_front = nullptr;
+	}
+	else
+	{
+		q->_front = pDel->_pNext;
+	}
+
+	free(pDel);
+	pDel = nullptr;
+}
+QDataType QueueFront(Queue* q)
+{
+	assert(q);
+	return q->_front->_data;
+}
+QDataType QueueBack(Queue* q)
+{
+	assert(q);
+	return q->_back->_data;
+}
+int QueueSize(Queue* q)
+{
+	assert(q);
+	int count = 0;
+	QNode* pCur = q->_front;
+
+	while (pCur)
+	{
+		count++;
+		pCur = pCur->_pNext;
+	}
+
+	return count;
+}
+bool QueueEmpty(Queue* q)
+{
+	assert(q);
+	return q->_front == nullptr;
+}
+
+void QueueDestroy(Queue* q)
+{
+	QNode* pCur = q->_front;
+	
+	while (pCur)
+	{
+		q->_front = pCur->_pNext;
+		free(pCur);
+		pCur = pCur->_pNext;
+	}
+
+	pCur = q->_front = q->_back = nullptr;
+}
