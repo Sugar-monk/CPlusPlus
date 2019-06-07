@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+bool IsNum(int n)
+{
+    vector<int> arr;
+    for(int i = 1; i < n; ++i)
+    {
+        if(n%i == 0)
+            arr.push_back(i);
+    }
+    int sum = 0;
+    for(auto e:arr)
+        sum += e;
+    
+    return sum == n;
+}
+int Count(int n)
+{
+    if(n < 0 || n > 500000)
+        return -1;
+    
+    int ret = 0;
+    for(int i = 1; i <= n; ++i)
+    {
+        if(IsNum(i))
+            ret++;
+    }
+    
+    return ret;
+}
+
+int main()
+{
+    int n;
+    while(cin >> n)
+    {
+        int count = 0;
+        count = Count(n);
+        cout << count << endl;
+    }
+    return 0;
+}
