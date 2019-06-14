@@ -1,0 +1,59 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+typedef char BTDataType;
+typedef struct BTree
+{
+    BTree* left;
+    BTree* right;
+    BTDataType _data;
+}BTree;
+
+BTree* BuyData(BTDataType data)
+{
+    BTree* root = (BTree*)malloc(sizeof(BTree));
+    root->_data = data;
+    root->left = NULL;
+    root->right = NULL;
+    
+    return root;
+}
+
+BTree* _CreatBTree(string arr, size_t* index)
+{
+    BTree* root = NULL;
+    if((*index) < arr.size() && arr[*index] != '#')
+    {
+        root = BuyData(arr[*index]);
+        (*index)++;
+        root->left = _CreatBTree(arr, index);
+        (*index)++;
+        root->right = _CreatBTree(arr, index);
+    }
+    
+    return root;
+}
+
+void Inder(BTree* root)
+{
+    if(root != NULL)
+    {
+        Inder(root->left);
+        cout << root->_data << " ";
+        Inder(root->right);
+    }
+ 
+}
+
+int main()
+{
+    string arr;
+    getline(cin, arr);
+    size_t index = 0;
+    BTree* root = _CreatBTree(arr, &index);
+    
+    Inder(root);
+    return 0;
+}
