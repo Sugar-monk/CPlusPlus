@@ -1,0 +1,57 @@
+class Solution {
+public:
+    //定义一个判断当前字符串中是否有重复字符的函数
+    //如果没有重复用这个字符串的长度和最大长度进行比较
+    bool IsRepeat(string &str)
+    {
+        //用哈希映射的方式，判断是否有重复
+        //由于Ascll中的字符只有127个，所以定义128大小的数组正好合适
+        int hash[128] = {0};
+        for(auto e:str)
+            hash[e]++;
+        
+        for(int i = 0; i < 128; ++i)
+        {
+            if(hash[i] > 1)
+                return false;
+        }
+        
+        return true;
+    }
+    int lengthOfLongestSubstring(string s) {
+        if(s.empty())
+            return 0;
+        size_t size = s.size();
+        if(size == 1)
+            return 1;
+        size_t max = 0;
+        for(size_t i = 0; i < size; ++i)
+        {
+            for(size_t j = i; j < size; ++j)
+            {
+                string tmp = s.substr(i,(j-i+1));
+                if(IsRepeat(tmp))
+                {
+                    if(tmp.size() > max)
+                        max = tmp.size();
+                }
+            }
+        }
+        
+        return (int)max;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
