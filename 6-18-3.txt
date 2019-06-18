@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+	//使用滑动窗口，依次向右移动
+        if(s.empty())
+            return 0;
+        
+        
+        size_t size = s.size();
+        if(size == 1)
+            return 1;
+        int left = 0;
+        int right = 0;
+        vector<int> hash(127, 0);
+        int count = 0;
+        int max = INT_MIN;
+    
+        while (right < size)
+        {
+            if (++hash[s[right]] > 1)
+            {
+                left++;
+                hash[s[right]]--;
+                hash[s[left - 1]]--;
+                
+                count--;
+            }
+            else
+            {
+                count++;
+                right++;
+            }
+            if (count > max)
+                max = count;
+	}
+
+	return max;
+    }
+};
