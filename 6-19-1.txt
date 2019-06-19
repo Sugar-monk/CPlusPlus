@@ -1,0 +1,53 @@
+class Solution {
+public:
+        double IsEmpty(vector<int>& num)
+        {
+            double ret;
+            size_t size = num.size();
+            if(size == 1)
+                return num[0];
+            int med = size / 2;
+            if (size% 2 == 0)
+            {
+                ret =  ((double)(num[med] + num[med - 1]) / 2);
+            }
+            else
+                ret = num[med];
+            
+            return ret;
+        }
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        double ret = 0.0;
+        
+        //如果这两个数组中有一个是空的，直接返回另一个的中位数即可
+        if (nums1.empty())
+            return IsEmpty(nums2);
+        if (nums2.empty())
+            return IsEmpty(nums1);
+    
+        
+        int size1 = nums1.size();
+        int size2 = nums2.size();
+        
+    
+        vector<double> buff;
+        
+        
+        for (auto e : nums1)
+            buff.push_back(e);
+        for (auto a : nums2)
+            buff.push_back(a);
+    
+        sort(buff.begin(), buff.end());
+        int size3 = buff.size();
+    
+        if (size3 % 2 == 0)
+        {
+            ret = ((buff[size3 / 2] + buff[size3 / 2 - 1]) / 2);
+        }
+        else
+            ret = buff[size3 / 2];
+    
+        return ret;
+}
+};
