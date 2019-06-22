@@ -1,0 +1,20 @@
+unsigned int reverse_bit(unsigned int value)
+{
+	vector<unsigned int> buff;
+	buff.resize(32, 0);
+	for (int i = 0; i < 32; ++i)
+	{
+		buff[i] = value & 1;
+		value = value >> 1;
+	}
+	reverse(buff.begin(), buff.end());
+
+	unsigned int ret = 0;
+
+	for (int i = 0; i < 32; ++i)
+	{
+		ret += buff[i] * (unsigned int)pow(2, i);
+	}
+	
+	return ret;
+}
