@@ -1,0 +1,81 @@
+#include <string>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+string Add(string str1, string str2)
+{
+	string ret;
+	int i = str1.size() - 1;
+	int j = str2.size() - 1;
+	int tmp = 0;
+
+	while (i >= 0 || j >= 0)
+	{
+		int a = 0;
+		int b = 0;
+		
+		if (i >= 0)
+			a = str1[i--] - '0';
+		if (j >= 0)
+			b = str2[j--] - '0';
+		tmp += a + b;
+		ret.push_back((tmp % 10) + '0');
+		tmp /= 10;
+	}
+
+	if (tmp == 1)
+	{
+		ret.push_back('1');
+	}
+	reverse(ret.begin(), ret.end());
+
+	return ret;
+}
+
+string Sub(const string &str1, const string &str2)
+{
+	int size1 = str1.size();
+	int size2 = str2.size();
+	if (size1 < size2)
+		return Sub(str2, str1);
+
+	string ret;
+
+	for (int i = size2 - 1; i >= 0; --i)
+	{
+		string str;
+		int a = str2[i] - '0';
+		int tmp = 0;
+		for (int j = size1 - 1; j >= 0; --j)
+		{
+			int b = str1[j] - '0';
+			tmp += a*b;
+			str.push_back((tmp % 10) + '0');
+			tmp /= 10;
+		}
+		if (tmp != 0)
+			str.push_back(tmp + '0');
+
+		reverse(str.begin(), str.end());
+		int zero = size2 - 1 - i;
+		while (zero-- > 0)
+		{
+			str.push_back('0');
+		}
+
+		ret = Add(ret, str);
+	}
+
+	return ret;
+}
+int main()
+{
+	string str1, str2;
+    cin >> str1 >> str2;
+    
+	string ret = Sub(str1, str2);
+	cout << ret << endl;
+	return 0;
+}
