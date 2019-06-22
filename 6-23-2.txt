@@ -1,0 +1,7 @@
+int MidNum(int a, int b)
+{
+	if (a < b)
+		swap(a, b);
+
+	return a - (a - b) / 2;
+}
