@@ -1,0 +1,48 @@
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+	unsigned long n;
+	while (cin >> n)
+	{
+		vector<unsigned long> buf(n);
+		for (int i = 0; i < n; ++i)
+			cin >> buf[i];
+
+		sort(buf.begin(), buf.end());
+
+		int count = 0;
+
+		for (int i = 0; i < n - 1; ++i)
+		{
+			size_t left = i, right = n - 1, mid;
+			double tmp;
+			int index;
+			while (left <= right)
+			{
+				mid = left + ((right - left) >> 1);
+				tmp = (double)buf[mid] * 0.9;
+
+				if (buf[i] >= tmp)
+				{
+					index = mid;
+					left = mid + 1;
+				}
+				else
+				{
+					right = mid - 1;
+				}
+			}
+
+			count += index - i;
+		}
+
+		cout << count << endl;
+	}
+	return 0;
+}
