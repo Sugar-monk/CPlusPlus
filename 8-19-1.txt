@@ -1,0 +1,237 @@
+#pragma once 
+
+#include <iostream>
+
+enum Color
+{
+	Black,
+	Red
+};
+
+template <class k, class v>
+struct RBTreeNode
+{
+	typedef RBTreeNode<k, v> Node;
+	
+	Node* left = nullptr;
+	Node* right = nullptr;
+	Node* parent = nullptr;
+	std::pair<k, v> _kv;
+	Color _color = Red;
+};
+
+template <class k, class v>
+class RBTree
+{
+public:
+	typedef RBTreeNode<k, v> Node;
+	typedef Node* pNode;
+
+	bool Insert(std::pair<k, v> kv)
+	{
+		Node* newNode = CreateNode(kv);
+		if (_head == nullptr)
+		{
+			_head->left = newNode;
+			_head->right = newNode;
+			_head->parent = newNode;
+
+			newNode->parent = _head;
+			newNode->_color = Black;
+
+			return true;
+		}
+
+		pNode cur = _head;
+		pNode parent = cur;
+		while (cur)
+		{
+			parent = cur;
+			if (cur->_kv.first < kv.first)
+				cur = cur->right;
+			else if (cur->_kv.first > kv.first)
+				cur = cur->left;
+			esle
+				return false;
+		}
+
+		//找到了合适的位置
+		if (parent->_kv.first > kv.first)
+			parent->left = newNode;
+		else
+			parent->right = newNode;
+		newNode->parent = parent;
+		cur = newNode;
+		//开始做调整
+		while (cur != _head->parent && parent->_color == Red)
+		{
+			pNode gParent = parent->parent;
+			pNode uncle;
+			if (parent == gParent->left)
+			{
+				uncle = parent->right;
+				if (uncle && uncle->_color == red)
+				{
+					//如果叔叔节点是红色的只需要变色就可以
+					parent->_color = Black;
+					uncle->_color = Black;
+					gParent->_color = Red;
+					cur = gParent;
+					parent = cur->parent;
+				}
+				else
+				{
+					//否则叔叔节点要么是黑色要么不存在，对应的调整是一样的
+					//判断是否需要双旋
+					if (cur == parent->right)
+					{
+						RotateL(parent);
+						swap(cur, parent);
+					}
+					
+					RotateR(gParent);
+
+					parent->_color = Black;
+					gParent->_color = Red;
+					break;
+				}
+			}
+			else if (parent == gParent->right)
+			{
+				uncle = gParent->left;
+				if (uncle && uncle->_color == Red)
+				{
+					parent->_color = Black;
+					uncle->_color = Black;
+					gParent->_color = Red;
+
+					cur = gParent;
+					parent = cur->parent;
+				}
+				else
+				{
+					if (cur == parent->left)
+					{
+						RotateR(parent);
+						swap(cur, parent);
+					}
+
+					RotateL(gParent);
+
+					gParent->_color = Red;
+					parent->_color = Black;
+
+					break;
+				}
+			}
+				
+		}
+		
+		_head->right = MaxRight();
+		_head->left = MaxLeft();
+	}
+
+	pNode MaxRight()
+	{
+		pNode cur = _head->parent;
+		while (cur && cur->right)
+			cur = cur->right;
+		return cur;
+	}
+	pNode MaxLeft()
+	{
+		pNode cur = _head->parent;
+		while (cur && cur->left)
+			cur = cur->left;
+
+		return cur;
+	}
+
+	void RotateL(pNode root)
+	{
+		pNode parent = root->parent;
+
+		parent->right = root->left;
+		root->left = parent;
+
+		root->parent = parent->parent;
+		parent->parent = root;
+	}
+
+	void RotateR(pNode parent)
+	{
+		pNode subL = parent->left;
+		pNode subLR = subL->right;
+
+		//单向链接
+		subL->right = parent;
+		parent->left = subLR;
+		if (subLR)
+			subLR->parent = parent;
+		subL->right = parent;
+
+		if (parent != _head->parent)
+		{
+			//如果父节点不是根节点，要分情况看是祖父节点哪个孩子
+			pNode gParent = parent->parent;
+			if (parent == gParent->left)
+				gParent->left = subL;
+			else
+				gParent->right = subL;
+
+			subL->parent = gParent;
+		}
+		else
+		{
+			//如果父节点是根节点，只需要和head互相连接就可以。
+			_head->parent = subL;
+			subL->parent = _head;
+		}
+
+		parent->parent = subL;
+	}
+
+	void RotateL(pNode parent)
+	{
+		pNode subR = parent->left;
+		pNode subRL = subR->right;
+
+		parent->right = subRL;
+		subR->left = parent;
+		if (subRL)
+			subRL->parent = parent;
+
+		if (parent != _head->parent)
+		{
+			pNode gParent = parent->parent;
+			if (parent == gParent->left)
+				subR = gParent->left;
+			else
+				subR = gParent->right;
+
+			subR->parent = gParent;
+		}
+		else
+		{
+			subR->parent = _head;
+			_head->parent = subR;
+		}
+
+		parent->parent = subR;
+	}
+private:
+	Node* CreateNode(const valuetype& kv)
+	{
+		Node* ret = new Node;
+		ret->_kv = kv;
+		ret->left = nullptr;
+		ret->right = nullptr;
+		ret->parent = nullptr;
+
+		return ret;
+	}
+private:
+	Node* _head;
+
+
+};
