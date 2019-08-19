@@ -1,0 +1,46 @@
+//交换后的最大整数
+#include <string>
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+int StrToInt(string str)
+{
+	int ret;
+
+	stringstream tmp(str);
+	tmp >> ret;
+
+	return ret;
+}
+
+int Max(string& str)
+{
+	int ret = 0;
+
+	int size = str.size();
+
+	for (auto i = 0; i < size; ++i)
+	{
+		for (int j = i + 1; j < size; ++j)
+		{
+			swap(str[i], str[j]);
+			ret = max(ret, StrToInt(str));
+			swap(str[i], str[j]);
+		}
+	}
+
+
+	return ret;
+}
+
+int main()
+{
+	string str;
+	while (cin >> str)
+	{
+		cout << Max(str) << endl;
+	}
+	return 0;
+}
