@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+#include <sstream>
+
+using namespace std;
+
+int Count(vector<int>& buf, const int& h)
+{
+	int ret;
+	sort(buf.begin(), buf.end());
+
+	ret = buf[0];
+	size_t i = 1;
+	int count = 1;
+	size_t size = buf.size();
+	while (i < size)
+	{
+		int tmp = buf[i] % ret > 0 ? 1 : 0;
+		int a = buf[i] / ret;
+		count += tmp + a;
+		if (count < h)
+			i++;
+		else if (count == h && i == size - 1)
+		{
+			break;
+		}
+		else
+		{
+			i = 1;
+			ret++;
+			count = 1;
+		}
+	}
+
+	return ret;
+}
+
+int main()
+{
+	int n, h;
+	while (cin >> n >> h)
+	{
+		vector<int> buf(n);
+		for (int i = 0; i < n; ++i)
+			cin >> buf[i];
+
+		cout << Count(buf, h) << endl;
+	}
+	return 0;
+}
