@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <algorithm>
+
+using namespace std;
+
+int StrToInt(string str)
+{
+
+	stringstream tmp(str);
+	int ret;
+	tmp >> ret;
+
+	return ret;
+}
+
+bool cmp(int a, int b)
+{
+    string A, B;
+    
+    A += to_string(a);
+    A += to_string(b);
+    B += to_string(b);
+    B += to_string(a);
+    
+    return A < B;
+    
+}
+
+string MaxNum(vector<int>& buf)
+{
+    
+    string ret;
+    sort(buf.begin(), buf.end(), cmp);
+    
+    for(int i = 0; i < buf.size(); ++i)
+        ret += to_string(buf[i]);
+    
+    return ret;
+        
+}
+
+int main()
+{
+	string str;
+
+	while (cin >> str)
+	{
+		vector<int> buf;
+		string tmp;
+
+		int j = 0;
+		for (auto i = 0; i < str.size(); ++i)
+		{
+            tmp.push_back(str[i]);
+			if (str[i] == ',')
+			{
+				buf.push_back(StrToInt(tmp));
+                tmp.clear();
+			}
+		}
+		if (!tmp.empty())
+			buf.push_back(StrToInt(tmp));
+
+		cout << MaxNum(buf) << endl;
+
+	}
+
+	return 0;
+}
