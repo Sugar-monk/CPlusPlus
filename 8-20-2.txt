@@ -1,0 +1,169 @@
+#include <iostream>
+
+using namespace std;
+
+template <class k, class v>
+struct AVLTreeNode
+{
+	typedef AVLTreeNode<k, v> Node;
+	Node* left = nullptr;
+	Node* right = nullptr;
+	Node* parent = nullptr;
+	pair<k, v> _data;
+	int fd = 0;
+};
+
+template <class k, class v>
+class AVLTree
+{
+public:
+	typedef AVLTreeNode<k, v> Node;
+	typedef Node* pNode;
+
+	bool Insert(pair<k, v> kv)
+	{
+		if (root == nullptr)
+		{
+			root = Create(kv);
+			return true;
+		}
+
+		//按照二叉搜索树的方式进行插入
+		pNode cur = root;
+		pNode parent;
+		while (cur)
+		{
+			parent = cur;
+			if (cur->_data.first < kv.first)
+				cur = cur->right;
+			else if (cur->_data.first > kv.first)
+				cur = cur->left;
+			else
+				return false;
+		}
+
+		cur = Create(kv);
+		if (parent->_data.first < kv.first)
+		{
+			parent->right = cur;
+		}
+		else
+		{
+			parent->left = cur;
+		}
+		cur->parent = parent;
+
+		//开始调整
+
+		while (parent)
+		{
+			//根新当前父节点的平衡因子
+			if (cur == parent->left)
+				parent->fd--;
+			else
+				parent->fd++;
+
+
+			if (parent->fd == 0)
+				break;
+			else if (parent->fd == -1 || parent->fd = 1)
+			{
+				cur = parent;
+				parent = parent->parent;
+			}
+			else
+			{
+				if (parent->fd == 2)
+				{
+					if (cur->fd == -1)
+					{
+						RotateR(cur);
+					}
+
+					RotateL(parent);
+				}
+				else if (parent->fd == -2)
+				{
+					if (cur->fd == 1)
+					{
+						RotateL(cur);
+					}
+					RotateR(parent);
+				}
+			}
+		}
+	}
+
+	void RotateR(pNode parent)
+	{
+		pNode subL = parent->left;
+		pNode subLR = subL->right;
+		pNode gParent = parent->parent;
+
+		parent->left = subLR;
+		if (subLR)
+			subLR->parent = parent;
+		subL->right = parent;
+		parent->parent = subL;
+
+		if (gParent == nullptr)
+		{
+			root = subL;
+		}
+		else
+		{
+			if (parent == gParent->left)
+				gParent->left = subL;
+			else
+				gParent->right = subL;
+		}
+
+		subL->parent = gParent;
+
+		parent->fd = subL->fd = 0;
+	}
+
+	void RotateL(pNode parent)
+	{
+		pNode subR = parent->right;
+		pNode subRL = subR->left;
+		pNode gParent = parent->parent;
+
+		parent->right = subLR;
+		if (subLR)
+			subR->parent = parent;
+
+		subR->left = parent;
+		parent->parent = subR;
+
+		if (gParent == nullptr)
+		{
+			root = subR;
+		}
+		else
+		{
+			if (parent == gParent->left)
+				gParent->left = subR;
+			else
+				gParent->right = subR;
+		}
+		subR->parent = gParent;
+
+		subR->fd = parent->fd = 0;
+	}
+
+	pNode Create(pair<k, v> kv)
+	{
+		pNode ret = new Node;
+		ret->fd = 0;
+		ret->left = nullptr;
+		ret->right = nullptr;
+		ret->_data = kv.first;
+		ret->parent = nullptr;
+
+		return ret;
+	}
+
+private:
+	pNode root;
+};
