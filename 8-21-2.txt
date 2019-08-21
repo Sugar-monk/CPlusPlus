@@ -1,0 +1,42 @@
+class Solution {
+public:
+    bool isNumeric(char* string)
+    {
+        size_t size = strlen(string);
+        bool point = false, dec = false, hasE = false;
+        for(size_t i = 0; i < size; ++i)
+        {
+            //如果是第一个-+,要么是在第一个位置，要么在e后面
+            if(string[i] == '-' || string[i] == '+')
+            {
+                if(dec && string[i-1] != 'e' &&  string[i-1] != 'E')
+                    return false;
+                else if(!dec && i > 0 && string[i-1] != 'e' && string[i-1] != 'E')
+                    return false;
+                
+                dec = true;
+            }
+            else if(string[i] == 'e' || string[i] == 'E')
+            {
+                if(hasE)
+                    return false;
+                if(i == size - 1)
+                    return false;
+                
+                hasE = true;
+            }
+            else if( string[i] < '0' || string[i] > '9')
+                return false;
+            else if(string[i] == '.')
+            {
+                if(point || hasE)
+                    return false;
+                else if(i == 0)
+                point = true;
+            }
+        }
+        
+        return true;
+    }
+
+};
