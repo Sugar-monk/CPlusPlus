@@ -1,0 +1,80 @@
+#include <string>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+static void CounMax(vector<int>& out, const string& str)
+{
+	int begin = 0;
+	int begin1 = begin;
+	bool flag = true;
+	while (begin < str.size())
+	{
+		int tmp = str.rfind(str[begin]);
+		if (tmp != begin && tmp + 1 < str.size())
+		{
+			flag = true;
+			for (int i = begin; i < tmp && tmp < str.size(); ++i)
+			{
+				int fd = str.rfind(str[i]);
+				if (fd != string::npos && fd > tmp)
+					tmp = fd;
+			}
+
+			out.push_back(tmp - begin1+1);
+			begin1 = begin = tmp + 1;
+		}
+		else if (tmp == str.size() - 1)
+		{
+			out.push_back(str.size() - begin1);
+			return ;
+		}
+		else
+		{
+			if (flag)
+			{
+				flag = false;
+				begin1 = begin;
+			}
+			++begin;
+		}
+	}
+}
+
+
+static void CounMin(vector<int>& out, const string& str)
+{
+	size_t begin = 0;
+	size_t begin1 = begin;
+	bool flag = true;
+	while (begin < str.size())
+	{
+		int tmp = str.rfind(str[begin]);
+		if (tmp != begin && tmp + 1 < str.size())
+		{
+			flag = true;
+			for (int i = begin; i < tmp && tmp < str.size(); ++i)
+			{
+				int fd = str.rfind(str[i]);
+				if (fd != string::npos && fd > tmp)
+					tmp = fd;
+			}
+
+			out.push_back(tmp - begin1 + 1);
+			begin1 = begin = tmp + 1;
+		}
+		else if (tmp == str.size() - 1)
+		{
+			out.push_back(str.size() - begin1);
+			return;
+		}
+		else
+		{
+			out.push_back(1);
+
+			++begin;
+			begin1 = begin;
+		}
+	}
+}
