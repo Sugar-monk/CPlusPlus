@@ -1,0 +1,61 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <sstream>
+
+using namespace std;
+
+int StrToInt(string str)
+{
+	stringstream tmp(str);
+	int ret;
+	tmp >> ret;
+
+	return ret;
+}
+
+int main()
+{
+	int n;
+
+	while (cin >> n)
+	{
+		vector<string> Type;
+		Type.resize(n);
+		for (int i = 0; i < 3; ++i)
+			cin >> Type[i];
+
+
+		vector<string> name;
+		string tmp, num;
+
+		for (int i = 0; i < n; ++i)
+		{
+			cin >> tmp >> num;
+			if ((tmp.c_str) >= '0' && (char)(tmp.c_str) <= '9')
+			{
+				swap(tmp, num);
+			}
+
+			int num1 = StrToInt(num);
+			if (num1 == 2)
+			{
+				size_t size1 = tmp.size() - Type[1].size();
+				if (tmp.substr(size1) != Type[1])
+					name.push_back(tmp + Type[1]);
+				else
+					name.push_back(tmp);
+			}
+			else
+			{
+				name.push_back(Type[num1 - 1] + tmp);
+			}
+		}
+
+		for (auto& e : name)
+			cout << e << endl;
+
+	}
+
+	return 0;
+}
