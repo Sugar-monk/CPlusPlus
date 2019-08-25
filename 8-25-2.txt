@@ -1,0 +1,184 @@
+#include <vector>
+#include <string>
+#include <iostream>
+
+using namespace std;
+
+void Up(vector<vector<int> >& buf)
+{
+	
+	for (int i = 0; i < 4; ++i)
+	{
+		int up = 0;
+		int tmp = 0;
+		int index = 0;
+		while (up < 4)
+		{
+			if (buf[up][i] == buf[index][i] && buf[up][i] != 0)
+			{
+				buf[index][i] = buf[up][i] + buf[index][i];
+				buf[up][i] = 0;
+			}
+			else if (buf[tmp][i] == 0 && buf[up][i] != 0)
+			{
+				buf[tmp][i] = buf[up][i];
+				buf[up][i] = 0;
+			}
+			if (buf[tmp][i] != 0)
+			{
+				index = tmp;
+				tmp++;
+			}
+			if (buf[up][i] != 0 && up == index + 1)
+				++index;
+			++up;
+		}
+
+	}
+
+
+}
+void Down(vector<vector<int> >& buf)
+{
+	for (int i = 3; i >= 0; --i)
+	{
+		int down = 3;
+		int tmp = 3;
+		while (down > 0)
+		{
+			if (buf[down][i] == buf[down - 1][i] && buf[down][i] != 0)
+			{
+				buf[tmp][i] = buf[down][i] + buf[down - 1][i];
+				buf[down - 1][i] = 0;
+				if (tmp != down)
+					buf[down][i] = 0;
+				--tmp;
+			}
+			else if (buf[tmp][i] == 0 && buf[down][i] != 0)
+			{
+				buf[tmp][i] = buf[down][i];
+				buf[down][i] = 0;
+			}
+			if (buf[tmp][i] != 0)
+				tmp--;
+			--down;
+		}
+		if (buf[tmp][i] == 0 && buf[down][i] != 0)
+		{
+			buf[tmp][i] = buf[down][i];
+			buf[down][i] = 0;
+		}
+
+	}
+}
+void Left(vector<vector<int> >& buf)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		int left = 0;
+		int tmp = 0;
+		while (left < 3)
+		{
+			if (buf[i][left] == buf[i][left+1] && buf[i][left] != 0)
+			{
+				buf[i][tmp] = buf[i][left] + buf[i][left+1];
+				buf[i][left+1] = 0;
+				if (tmp != left)
+					buf[i][left] = 0;
+				++tmp;
+			}
+			else if (buf[i][tmp] == 0 && buf[i][left] != 0)
+			{
+				buf[i][tmp] = buf[i][left];
+				buf[i][left] = 0;
+			}
+			if (buf[i][tmp] != 0)
+				++tmp;
+			++left;
+		}
+		if (buf[tmp][left] == 0 && buf[i][left] != 0)
+		{
+			buf[i][tmp] = buf[i][left];
+			buf[i][left] = 0;
+		}
+
+	}
+}
+void Right(vector<vector<int> >& buf)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		int left = 2;
+		int tmp = 3;
+		int index = 3;
+		while (left >= 0)
+		{
+			if (buf[i][left] == buf[i][index] && buf[i][left] != 0)
+			{
+				buf[i][index] = buf[i][left] + buf[i][index];
+				buf[i][left] = 0;
+			}
+			else if (buf[i][tmp] == 0 && buf[i][left] != 0)
+			{
+				buf[i][tmp] = buf[i][left];
+				buf[i][left] = 0;
+			}
+			if (buf[i][tmp] != 0)
+			{
+				index = tmp;
+				--tmp;
+			}
+			if (buf[i][left] != 0 && left == index - 1)
+				--index;
+				
+			--left;
+		}
+
+	}
+}
+
+int main()
+{
+	int n;
+
+	while (cin >> n)
+	{
+		vector<vector<int> >buf;
+		for (int i = 0; i < 4; ++i)
+		{
+			vector<int> tmp(4);
+			for (int j = 0; j < 4; ++j)
+				cin >> tmp[j];
+
+			buf.push_back(tmp);
+		}
+
+		switch (n)
+		{
+		case 1:
+			Up(buf);
+			break;
+		case 2:
+			Down(buf);
+			break;
+		case 3:
+			Left(buf);
+			break;
+		case 4:
+			Right(buf);
+			break;
+		default:
+			break;
+		}
+
+		cout << "-------" << endl;
+		for (const auto &e : buf)
+		{
+			for (const auto &a : e)
+				cout << a << " ";
+
+			cout << endl;
+		}
+	}
+	return 0;
+}
