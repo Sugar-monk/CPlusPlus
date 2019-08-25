@@ -1,0 +1,45 @@
+#include <string>
+#include <iostream>
+
+using namespace std;
+
+static string And(const string& str1, const string& str2)
+{
+	string ret;
+	int size = str1.size();
+	int j = 0, i = 0;
+	for (; i < size && j < str2.size(); ++i)
+	{
+		ret.push_back(str1[i]);
+		if ((i + 1) % 4 == 0)
+			ret.push_back(str2[j++]);
+	}
+	if (j != str2.size())
+		ret += str2.substr(j);
+	if (i != str1.size())
+		ret += str1.substr(i);
+
+	return  ret;
+}
+
+int main()
+{
+	string str1, str2;
+
+	while (getline(cin, str1) && getline(cin, str2))
+	{
+		string cin1, cin2;
+		for (auto i = 0; i < str1.size(); ++i)
+			if (str1[i] != ' ')
+				cin1.push_back(str1[i]);
+		for (auto i = 0; i < str2.size(); ++i)
+			if (str2[i] != ' ')
+				cin2.push_back(str2[i]);
+		str1 = And(cin1, cin2);
+		auto i = 0;
+		for (; i < str1.size() - 1; ++i)
+			cout << str1[i] << ' ';
+		cout << str1[i] << endl;
+	}
+	return 0;
+}
