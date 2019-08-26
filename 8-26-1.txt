@@ -1,0 +1,93 @@
+#include <iostream>
+#include <algorithm>
+#include <sstream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+char Base_data[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+vector<int> DtoB(int a)
+{
+	vector<int> ret;
+	while (a)
+	{
+		ret.push_back(a % 2);
+		a /= 2;
+	}
+
+	reverse(ret.begin(), ret.end());
+
+	return ret;
+}
+
+int BtoD(string str)
+{
+	int arr[] = { 1, 2, 4, 8, 16, 32 };
+	reverse(str.begin(), str.end());
+	int ret = 0;
+	for (int i = 0; i < str.size(); ++i)
+	{
+		if (str[i] != '0')
+			ret += arr[i];
+	}
+
+	return ret;
+}
+
+string Base(const string& str)
+{
+	vector<vector<int> > buf;
+	string ret;
+	for (size_t i = 0; i < str.size(); ++i)
+	{
+		buf.push_back(DtoB((int)str[i]));
+	}
+
+	string Str;
+	for (int i = 0; i < buf.size(); ++i)
+	{
+		string tmp;
+		for (int j = 0; j < buf[i].size(); ++j)
+			tmp.push_back(buf[i][j] + '0');
+
+		if (tmp.size() < 8)
+		{
+			int size = 8 - tmp.size();
+			for (int a = 0; a < size; ++a)
+				tmp = '0' + tmp;
+		}
+
+		Str += tmp;
+	}
+
+	if (Str.size() < 24)
+	{
+		for (int i = Str.size(); i < 24; ++i)
+			Str.push_back('0');
+	}
+	for (int i = 0; i < 24; i += 6)
+	{
+		string sub = Str.substr(i, 6);
+		int t = BtoD(sub);
+		if (t == 0)
+			ret.push_back('=');
+		else
+			ret.push_back(Base_data[t]);
+	}
+
+	return ret;
+}
+
+int main()
+{
+	string str;
+
+	while (cin >> str)
+	{
+		cout << Base(str) << endl;
+	}
+
+	return 0;
+}
