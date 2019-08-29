@@ -1,0 +1,52 @@
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+string CmpBuf;
+
+static bool cmp(const string& str1, const string& str2)
+{
+	size_t i = 0;
+	while (i < str1.size() && i < str2.size())
+	{
+		if (str1[i] != str2[i])
+		{
+			int index1 = CmpBuf.find(str1[i]);
+			int index2 = CmpBuf.find(str2[i]);
+			return index1 < index2;
+		}
+		++i;
+	}
+
+	if (i < str1.size())
+		return false;
+	if (i < str2.size())
+		return true;
+}
+
+static void Sort(vector<string>& buf)
+{
+	sort(buf.begin(), buf.end(), cmp);
+	CmpBuf.clear();
+}
+
+int main()
+{
+	
+	int n;
+
+	while (cin >> CmpBuf >> n)
+	{
+		vector<string> buf(n);
+		for (auto &e : buf)
+			cin >> e;
+
+		Sort(buf);
+		for (const auto& a : buf)
+			cout << a << endl;
+	}
+	return 0;
+}
