@@ -1,0 +1,96 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int Ret(int left, int right, int both)
+{
+	int ret;
+	int sum = right + both;
+	if (sum == left)
+	{
+		ret = right + left + both;
+	}
+	else if (sum > left)
+	{
+		ret = 2 * left;
+		int sub = left - right;
+		both -= sub;
+		sub = (both / 2) * 2;
+		ret += sub;
+	}
+	else
+	{
+		ret = 2 * (both + right);
+	}
+
+	return ret;
+}
+
+static int Cout(int& left, int& right, int& both)
+{
+	int ret = 0;
+	if (left == right && right == both)
+	{
+		ret = right + left;
+		ret += (both / 2) * 2;
+		return ret;
+	}
+	if (both == 0)
+	{
+		int _min = min(left, right);
+		ret = 2 * _min;
+
+		return ret;
+	}
+
+	if (right == 0 && left == 0)
+	{
+		return (both / 2) * 2;
+	}
+	int _max = max(left, max(right, both));
+	if (_max == left)
+	{
+		ret = Ret(left, right, both);
+	}
+	else if (_max == right)
+	{
+		ret = Ret(right, left, both);
+	}
+	else if (_max == both)
+	{
+		int sub;
+		if (left > right)
+		{
+			ret += 2 * left;
+			sub = left - right;
+			both -= sub;
+			ret += (both / 2) * 2;
+		}
+		else if (left < right)
+		{
+			ret += 2 * right;
+			sub = right - left;
+			both -= sub;
+			ret += (both / 2) * 2;
+		}
+		else
+		{
+			ret += 2 * left;
+			ret += (both / 2) * 2;
+		}
+	}
+
+	return ret;
+}
+
+int main()
+{
+	int left, right, both;
+
+	while (cin >> left >> right >> both)
+	{
+		cout << Cout(left, right, both) << endl;
+	}
+	return 0;
+}
