@@ -11,3 +11,25 @@ void FindNumsAppearOnce(vector<int> data, int* num1, int *num2) {
 	*num1 = buf[0];
 	*num2 = buf[1];
 }
+
+ void FindNumsAppearOnce(vector<int> data,int* num1,int *num2) {
+        
+        if(data.size() >= 2)
+        {
+            vector<int> buf;
+            sort(data.begin(), data.end());
+            int p1 = 0, p2 = 1, p3 = 2;
+            if(data[p1] != data[p2])
+                buf.push_back(data[p1]);
+            for(size_t i = 1; i < data.size()-1; ++i)
+            {
+                if(data[i - 1] != data[i] && data[i] != data[i+1])
+                    buf.push_back(data[i]);
+            }
+            if(data[data.size()-1] != data[data.size()-2])
+                buf.push_back(data[data.size()-1]);
+            *num1 = buf[0];
+            *num2 = buf[1];
+        
+        }
+}
