@@ -1,0 +1,55 @@
+#include <iostream>
+#include <algorithm>
+#include <set>
+#include <string>
+
+using namespace std;
+
+void StrToInt(string str, set<int>& buf)
+{
+	bool flag = false;
+	for (auto i = 0; i < str.size(); ++i)
+	{
+		if (str[i] == '-')
+			flag = true;
+		if (str[i] >= '0' && str[i] <= '9')
+		{
+			int tmp = str[i] - '0';
+			if (flag)
+				tmp = 0 - tmp;
+
+			buf.insert(tmp);
+			flag = false;
+		}
+	}
+}
+
+int Count(string& str)
+{
+	set<int> buf;
+	StrToInt(str, buf);
+	int sum = 0;
+	
+	set<int>::iterator ite1;
+	for (ite1 = buf.begin(); ite1 != buf.end(); ++ite1)
+	{
+		set<int>::iterator ite2 = ite1;
+		for (++ite2; ite2 != buf.end(); ++ite2)
+		{
+			if (*ite1 + *ite2 == 0)
+				++sum;
+		}
+	}
+
+	return sum;
+}
+
+int main()
+{
+	string str;
+	while (getline(cin, str))
+	{
+		cout << Count(str) << endl;
+	}
+	return 0;
+}
