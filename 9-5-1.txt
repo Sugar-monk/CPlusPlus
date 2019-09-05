@@ -1,0 +1,78 @@
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+static int StrToInt(string str)
+{
+	stringstream tmp(str);
+	int ret;
+	tmp >> ret;
+
+	return ret;
+}
+
+static void StringToVector(string str, vector<int>& buf)
+{
+	string tmp;
+	for (size_t i = 0; i < str.size(); ++i)
+	{
+		if (str[i] == ' ')
+		{
+			buf.push_back(StrToInt(tmp));
+			tmp.clear();
+		}
+		else
+		{
+			tmp.push_back(str[i]);
+		}
+	}
+}
+
+static int Count(string str)
+{
+	vector<int> buf;
+	StringToVector(str, buf);
+	int size = buf.size();
+
+	if (size == 2)
+		return 1;
+	vector<int> tmp(size);
+	int t = buf[size - 1];
+	for (int i = size - 2; i >= 0; --i)
+	{
+		t = min(buf[i + 1], t);
+		tmp[i] = t;
+	}
+
+	int left = 0;
+	int mleft = buf[0];
+	while (left < size - 1)
+	{
+		if (mleft <= tmp[left])
+		{
+			break;
+		}
+		else
+		{
+			++left;
+			if (buf[left] > mleft)
+				mleft = tmp[left];
+		}
+	}
+
+	return left + 1;
+}
+
+int main()
+{
+	string str;
+	while (getline(cin, str))
+	{
+		cout << Count(str) << endl;
+	}
+	return 0;
+}
