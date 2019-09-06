@@ -1,0 +1,66 @@
+#include<cstdio>
+#include<cstring>
+#include<string>
+#include<algorithm>
+#include<cmath>
+
+using namespace std;
+
+#define inf 0x3f3f3f3f
+int n, m, R;
+int dist[210][210];
+int r[16];
+int dp[41000][16];
+	
+int main()
+{
+	memset(dist, inf, sizeof(dist));
+	memset(dp, inf, sizeof(dp));
+	scanf("%d%d%d", &n, &m, &R);
+	int x, y, w;
+	for (int i = 0; i < R; ++i)
+	{
+		scanf("%d", &r[i]);
+	}
+	for (int i = 1; i <= m; ++i)
+	{
+		scanf("%d%d%d", &x, &y, &w);
+		dist[x][y] = dist[y][x] = w;
+	}
+	for (int i = 1; i <= n; ++i)
+	{
+		for (int j = 1; j <= n; ++j)
+		{
+			for (int k = 1; k <= n; ++k)
+			{
+				if (i == j || j == k || k == i)continue;
+				dist[j][k] = min(dist[j][k], dist[j][i] + dist[i][k]);
+			}
+		}
+	}
+	for (int i = 0; i < R; ++i)
+	{
+		dp[1 << i][i] = 0;
+	}
+	for (int i = 1; i < (1 << R); ++i)
+	{
+		for (int j = 0; j < R; ++j)
+		{
+			if (!(i&(1 << j)))continue;
+			x = r[j];
+			for (int k = 0; k < R; ++k)
+			{
+				if (i&(1 << k))continue;
+				y = r[k];
+				dp[i + (1 << k)][k] = min(dp[i + (1 << k)][k], dp[i][j] + dist[x][y]);
+			}
+		}
+	}
+	int minx = inf;
+	for (int i = 0; i < R; ++i)
+	{
+		minx = min(minx, dp[(1 << R) - 1][i]);
+	}
+	printf("%d\n", minx);
+
+}
