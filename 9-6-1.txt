@@ -1,0 +1,58 @@
+#include <iostream>
+#include <unordered_set>
+#include <vector>
+
+using namespace std;
+
+bool Find(vector<int> buf, int n)
+{
+	for (size_t i = 0; i < buf.size(); ++i)
+	{
+		if (buf[i] == n)
+			return true;
+	}
+
+	return false;
+}
+
+bool IsHappy(int n)
+{
+	vector<int> got;
+	int m = n;
+
+	while (1)
+	{
+		int sum = 0;
+		while (m)
+		{
+			sum += (m % 10)*(m % 10);
+			m /= 10;
+		}
+
+		if (sum == 1)
+			return true;
+		else if (Find(got,sum))
+			return false;
+		else
+			got.push_back(sum);
+
+		m = sum;
+	}
+}
+
+
+int main()
+{
+	int n;
+
+	while (cin >> n)
+	{
+		bool flag = true;
+		flag = IsHappy(n);
+		if (flag)
+			cout << "True" << endl;
+		else
+			cout << "False" << endl;
+	}
+	return 0;
+}
