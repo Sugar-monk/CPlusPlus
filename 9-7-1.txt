@@ -1,0 +1,119 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+string buf = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+static string Expan(string& str)
+{
+	string tmp;
+	bool flag = true;
+	for (size_t i = 0; i < str.size()-1; ++i)
+	{
+		if (str[i] == '-')
+		{
+			string exp;
+			int n = 0;
+			int n1 = buf.find(str[i-1]);
+			int n2 = buf.find(str[i + 1]);
+			int size = buf.size();
+			if (n1 > n2)
+			{
+				n = n2 + size - n1;
+			}
+			else
+				n = n2 - n1;
+			for (int j = 0; j < n+1; ++j)
+			{
+				int pos = n1 + j;
+				if (pos >= size)
+					pos = pos - size;
+				char s = buf[pos];
+				exp.push_back(s);
+			}
+
+			tmp = exp;
+			break;
+		}
+		else
+			tmp.push_back(str[i]);
+	}
+
+	return tmp;
+}
+
+static string Cout(const string& str)
+{
+	string ret;
+	string tmp;
+	for (size_t i = 0; i < str.size(); ++i)
+	{
+		if (str[i] == '-' && i < (str.size() - 1))
+		{
+			string s;
+			tmp.pop_back();
+			s.push_back(str[i - 1]);
+			s.push_back(str[i]);
+			s.push_back(str[i + 1]);
+			tmp += Expan(s);
+			++i;
+		}
+		else if (str[i] >= '0' && str[i] <= '9')
+		{
+			int k = str[i] - '0';
+			for (int j = 0; j < k; ++j)
+				ret += tmp;
+			tmp.clear();
+		}
+		else
+			tmp.push_back(str[i]);
+
+	}
+
+	return ret;
+}
+
+static void Count(const string& str, int& Max, int& pos)
+{
+	string s;
+	s = Cout(str);
+
+	for (size_t i = 0; i < s.size(); ++i)
+	{
+		if (s[i] >= 'A' && s[i] <= 'Z')
+			s[i] = buf[s[i] - 'A'];
+	}
+
+	vector<int> array(buf.size() / 2, 0);
+
+	for (size_t i = 0; i < s.size(); ++i)
+	{
+		int n = buf.find(s[i]);
+		++array[n];
+		if (array[n] > Max)
+		{
+			pos = n;
+			Max = array[n];
+		}
+	}
+
+
+}
+
+
+
+int main()
+{
+	string str;
+
+	while (cin >> str)
+	{
+		int Max = 0, pos = 0;
+		Count(str, Max, pos);
+		cout << buf[pos] << Max << endl;
+	}
+
+}
