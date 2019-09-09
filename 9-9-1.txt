@@ -1,0 +1,89 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+
+using namespace std;
+
+string buf = "0SBQW";
+
+string IntToStr(int n)
+{
+	stringstream str;
+	string ret;
+	str << n;
+	str >> ret;
+
+	return ret;
+}
+string Cout(string str)
+{
+	string ret;
+	if (str.size() > 1)
+	{
+		int size = str.size();
+		bool flag = true;
+		for (int i = 0; i < size - 1; ++i)
+		{
+			if (i != size - 1 && str[i] == '0' && flag && str[i + 1] != '0')
+			{
+				ret += buf[0];
+				flag = false;
+			}
+			else if (str[i] != '0')
+			{
+				flag = true;
+				ret.push_back(str[i]);
+				ret.push_back(buf[size - i - 1]);
+			}
+		}
+		if (str[size - 1] != '0')
+			ret.push_back(str[size - 1]);
+	}
+	else if (str.size() > 0)
+		ret += str;
+
+	return ret;
+}
+
+string Print(string str)
+{
+	int size = str.size();
+	string ret;
+	if (size > 5)
+	{
+		if (size < 9)
+		{
+			string tmp(str.begin(), str.end() - 4);
+			ret += Cout(tmp);
+			if (!ret.empty())
+				ret.push_back('W');
+			tmp = str.substr(size - 4);
+			ret += Cout(tmp);
+		}
+		else
+		{
+			string tmp(str.begin(), str.end() - 8);
+			ret += Cout(tmp);
+			tmp = str.substr(tmp.size());
+			ret.push_back('Y');
+			ret  = ret + Print(tmp);
+		}
+	}
+	else if (size > 0)
+	{
+		ret = Cout(str);
+	}
+
+	return ret;
+}
+
+int main()
+{
+	int n;
+	while (cin >> n)
+	{
+		string str = IntToStr(n);
+		cout << Print(str) << endl;
+	}
+	return 0;
+}
