@@ -1,0 +1,411 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+//冒泡
+void BubbleSort(vector<int>& arr)
+{
+	int size = arr.size();
+	
+	for (int i = 0; i < size; ++i)
+	{
+		bool flag = true;
+		for (int j = 0; j < size - i - 1; ++j)
+		{
+			if (arr[j] > arr[j+1])
+			{
+				flag = false;
+				swap(arr[j], arr[j+1]);
+			}
+		}
+		if (flag)
+			return;
+	}
+}
+
+//选择
+void SelectSort(vector<int>& arr)
+{
+	int size = arr.size();
+	for (int i = 0; i < size - 1; ++i)
+	{
+		int maxPos = 0;
+		for (int j = 1; j < size - i; ++j)
+		{
+			if (arr[j] > arr[maxPos])
+				maxPos = j;
+		}
+
+		if (maxPos != size - i - 1)
+			swap(arr[maxPos], arr[size - i - 1]);
+	}
+}
+
+//插入
+void InsertSort(vector<int>& arr)
+{
+	int size = arr.size();
+
+	for (int i = 1; i < size; ++i)
+	{
+		int key = arr[i];
+		int end = i - 1;
+
+		//循环条件：
+		//如果当前位置合法，并且当前位置比key大
+		//则需要将数据向后搬移
+		while (end >= 0 && arr[end] > key)
+		{
+			arr[end + 1] = arr[end];
+			--end;
+		}
+
+		arr[end + 1] = key;
+	}
+}
+
+//希尔
+void ShellSort(vector<int>& arr)
+{
+	int size = arr.size();
+	int gap = size;
+
+	while (gap > 0)
+	{
+		gap = (gap / 3) + 1;
+		
+		for (int i = gap; i < size; ++i)
+		{
+			int key = arr[i];
+			int end = i - gap;
+
+			while (end >= 0 && arr[end] > key)
+			{
+				arr[end + gap] = arr[end];
+				end -= gap;
+			}
+
+			arr[end + gap] = key;
+		}
+
+		if (gap == 1)
+			break;
+	}
+}
+
+//快排
+
+int Partion(int left, int right, vector<int>& arr)
+{
+	int key = arr[right - 1];
+	int begin = left;
+	int end = right - 1;
+	while (begin < end)
+	{
+		while (begin < end && arr[begin] < key)
+			++begin;
+		while (begin < end && arr[end] >= key)
+			--end;
+		if (begin != end)
+			swap(arr[begin], arr[end]);
+	}
+
+	if (begin != right - 1)
+		swap(arr[begin], arr[right - 1]);
+
+	return begin;
+}
+
+void _QuickSort(int left, int right, vector<int>& arr)
+{
+	if (right - left > 1)
+	{
+		int mid = Partion(left, right, arr);
+		_QuickSort(left, mid, arr);
+		_QuickSort(mid + 1, right, arr);
+	}
+}
+
+void QuickSort1(vector<int>& arr)
+{
+	_QuickSort(0, arr.size(), arr);
+}
+
+void QuickSort(vector<int>& arr)
+{
+	int right = arr.size();
+	int left = 0;
+	stack<int> s;
+	s.push(right);
+	s.push(left);
+
+	while (!s.empty())
+	{
+		left = s.top();
+		s.pop();
+		right = s.top();
+		s.pop();
+
+		if (right - left > 1)
+		{
+			int mid = Partion(left, right, arr);
+
+			//保存右半部分
+			s.push(right);
+			s.push(mid + 1);
+
+			//保存左半部分
+			s.push(mid);
+			s.push(left);
+		}
+	}
+}
+
+//堆排序
+void HeapAdjust(vector<int>& arr, int root, int size)
+{
+	//先找左孩子，因为左孩子存在的可能性比右孩子大
+	int child = root * 2 + 1;
+	while(child < size)
+	{
+		//找到左右孩子中最大的孩子进行比较，如果比最大的孩子大，要交换
+		if (child + 1 < size && arr[child] < arr[child + 1])
+			++child;
+
+		if (arr[child] > arr[root])
+		{
+			swap(arr[child], arr[root]);
+			//由于发生了交换，所以子树可能需要调整
+			root = child;
+			child = child * 2 + 1;
+		}
+		else
+			return;
+	}
+}
+
+void HeapSort(vector<int>& arr)
+{
+	int size = arr.size();
+	int root = (size - 2) >> 1;
+	for (int i = root; i >= 0; --i)
+		HeapAdjust(arr, i, arr.size());
+
+	int end = size - 1;
+	while (end)
+	{
+		swap(arr[0], arr[end]);
+		HeapAdjust(arr, 0,end);
+		--end;
+	}
+}
+
+//归并排序
+void _MergeData(vector<int>& arr, vector<int>& tmp, int left, int mid, int right)
+{
+	int begin1 = left;
+	int end1 = mid;
+	int begin2 = mid;
+	int end2 = right;
+	int index = left;
+
+	while (begin1 < end1 && begin2 < end2)
+	{
+		if (arr[begin1] < arr[begin2])
+			tmp[index++] = arr[begin1++];
+		else
+			tmp[index++] = arr[begin2++];
+	}
+
+	while (begin1 < end1)
+		tmp[index++] = arr[begin1++];
+	while (begin2 < end2)
+		tmp[index++] = arr[begin2++];
+}
+
+void _MergeSort(vector<int>& arr, vector<int>& tmp, int left, int right)
+{
+	if (right - left >1)
+	{
+		int mid = left + ((right - left) >> 1);
+		_MergeSort(arr, tmp, left, mid);
+		_MergeSort(arr, tmp, mid, right);
+		_MergeData(arr, tmp, left, mid, right);
+
+		copy(tmp.begin() + left, tmp.begin() + right, arr.begin() + left);
+	}
+}
+
+void MergeSort(vector<int>& arr)
+{
+	vector<int> tmp(arr.size());
+	_MergeSort(arr, tmp, 0, arr.size());
+}
+
+void CountSort(vector<int>& arr)
+{
+	int size = arr.size();
+	vector<int>::iterator ite = max_element(arr.begin(), arr.end());
+	int m = (*ite);
+	vector<int> buf(m+1, 0);
+	for (size_t i = 0; i < size; ++i)
+	{
+		++buf[arr[i]];
+	}
+	int index = 0;
+	for (size_t i = 0; i < buf.size(); ++i)
+	{
+		if (buf[i] > 0)
+		{
+			for (int j = buf[i]; j > 0; --j)
+			{
+				arr[index++] = i;
+			}
+		}
+	}
+}
+
+void Print(vector<int>& arr)
+{
+	for (auto e : arr)
+		cout << e << " ";
+}
+
+void my_strcpy(char* str1, char* str2)
+{
+	while (*str1++ = *str2++);
+}
+void my_strncpy(char* str1, char* str2, int len)
+{
+	for (int i = 0; i < len; ++i)
+		*str1++ = *str2++;
+}
+int my_strlen(char* str)
+{
+	int ret = 0;
+	while (*str++ && ++ret);
+	return ret;
+}
+char* my_strstr(const char* str1, const char* str2)
+{
+	char* p1 = (char*)str1;
+	char* p2 = (char*)str2;
+	char* ret = nullptr;
+
+	while (*p1)
+	{
+		if (*p1 == *p2)
+		{
+			char* tmp = p1;
+			while (*tmp == *p2)
+			{
+				++tmp;
+				++p2;
+			}
+			if (*p2 == '\0')
+			{
+				ret = p1;
+				return ret;
+			}
+
+			p2 = (char*)str2;
+		}
+		++p1;
+	}
+	return ret;
+}
+int my_strcmp(const char* str1, const char* str2)
+{
+	while (*str1 == *str2)
+	{
+		++str1; 
+		++str2;
+	}
+	return *str1 - *str2;
+}
+void my_strcat(char* str1, const char* str2)
+{
+	while (*str1)
+	{
+		++str1;
+	}
+	while (*str2)
+	{
+		*str1++ = *str2++;
+	}
+}
+
+int main()
+{
+	vector<int> arr{ 23, 54, 23, 0, 343, 34, 2, 11, 3435, 0, 435, 235, -1, 3, 66, 33, 23 };
+	vector<int> buf(arr.size(), 0);
+	for (size_t i = 0; i < arr.size(); ++i)
+	{
+		buf[i] = arr[i];
+	}
+	BubbleSort(buf);
+	cout << "冒泡->";
+	Print(buf);
+	cout << endl;
+	for (size_t i = 0; i < arr.size(); ++i)
+	{
+		buf[i] = arr[i];
+	}
+	SelectSort(buf);
+	cout << "选择->";
+	Print(buf);
+	cout << endl;
+	for (size_t i = 0; i < arr.size(); ++i)
+	{
+		buf[i] = arr[i];
+	}
+	InsertSort(buf);
+	cout << "插入->";
+	Print(buf);
+	cout << endl;
+	for (size_t i = 0; i < arr.size(); ++i)
+	{
+		buf[i] = arr[i];
+	}
+	ShellSort(buf);
+	cout << "希尔->";
+	Print(buf);
+	cout << endl;
+	for (size_t i = 0; i < arr.size(); ++i)
+	{
+		buf[i] = arr[i];
+	}
+	QuickSort1(buf);
+	cout << "快排->";
+	Print(buf);
+	cout << endl;
+	for (size_t i = 0; i < arr.size(); ++i)
+	{
+		buf[i] = arr[i];
+	}
+	MergeSort(buf);
+	cout << "归并->";
+	Print(buf);
+	cout << endl;
+	for (size_t i = 0; i < arr.size(); ++i)
+	{
+		buf[i] = arr[i];
+	}
+	HeapSort(buf);
+	cout << "堆排->";
+	Print(buf);
+	cout << endl;
+	for (size_t i = 0; i < arr.size(); ++i)
+	{
+		buf[i] = arr[i];
+	}
+	CountSort(buf);
+	cout << "计数->";
+	Print(buf);
+	cout << endl;
+	
+	return 0;
+}
