@@ -1,0 +1,36 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <set>
+#include <string>
+using namespace std;
+
+static int Sum(const vector<string>& buf)
+{
+	set<string> tmp;
+	for (size_t i = 0; i < buf.size(); ++i)
+	{
+		string str(buf[i]);
+		sort(str.begin(), str.end());
+		tmp.insert(str);
+	}
+
+	int ret = 0;
+	ret = tmp.size();
+	return ret;
+}
+
+int main()
+{
+	int n;
+
+	while (cin >> n)
+	{
+		vector<string> buf(n);
+		for (int i = 0; i < n; ++i)
+			cin >> buf[i];
+
+		cout << Sum(buf) << endl;
+	}
+	return 0;
+}
