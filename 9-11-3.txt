@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <numeric>
+#include <algorithm>
+#include <limits>
+
+using namespace std;
+
+
+/*请完成下面这个函数，实现题目要求的功能
+当然，你也可以不按照下面这个模板来作答，完全按照自己的想法来 ^-^
+******************************开始写代码******************************/
+int MaxSort(vector<int> arr)
+{
+	int size = arr.size();
+	int ret = 0;
+	for (int i = 0; i < size; ++i)
+	{
+		int key = arr[i];
+		int end = i - 1;
+		bool flag = false;
+
+		while (end >= 0 && arr[end] < key)
+		{
+			flag = true;
+			arr[end + 1] = arr[end];
+			--end;
+		}
+
+		arr[end + 1] = key;
+
+		if (flag)
+			++ret;
+	}
+
+	return ret;
+}
+int MinSort(vector<int> arr)
+{
+	int size = arr.size();
+	int ret = 0;
+	for (int i = 0; i < size; ++i)
+	{
+		int key = arr[i];
+		int end = i - 1;
+		bool flag = false;
+
+		while (end >= 0 && arr[end] > key)
+		{
+			flag = true;
+			arr[end + 1] = arr[end];
+			--end;
+		}
+
+		arr[end + 1] = key;
+		if (flag)
+			++ret;
+	}
+
+	return ret;
+}
+
+int solution(vector < int > arr) {
+
+	int ret = 0;
+	ret = min(MinSort(arr), MaxSort(arr));
+
+	return ret;
+
+}
+/******************************结束写代码******************************/
+
+
+int main() {
+	int res;
+
+	int _arr_size = 0;
+	cin >> _arr_size;
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	vector<int> _arr;
+	int _arr_item;
+	for (int _arr_i = 0; _arr_i<_arr_size; _arr_i++) {
+		cin >> _arr_item;
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		_arr.push_back(_arr_item);
+	}
+
+
+
+	res = solution(_arr);
+	cout << res << endl;
+
+	return 0;
+
+}
