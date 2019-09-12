@@ -1,0 +1,34 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void _Pre(string mid, string post, int root, int begin, int end, string& ret)
+{
+    if(begin <= end)
+        {
+            int i = begin;
+            while(i < end && mid[i] != post[root])
+                ++i;
+            ret.push_back(post[root]);
+            _Pre(mid, post, root-1-end+i, begin, i-1, ret);
+            _Pre(mid, post, root-1, i+1, end, ret);
+        }
+}
+
+string Pre(string mid, string post, int root, int begin, int end)
+{
+    string ret;
+    _Pre(mid, post, root, begin, end, ret);
+    
+    return ret;
+}
+int main()
+{
+    string mid, post;
+    while(cin >> mid >> post)
+        {
+            cout << Pre(mid, post, mid.size()-1, 0, post.size()-1) << endl;
+        }
+    return 0;
+}
