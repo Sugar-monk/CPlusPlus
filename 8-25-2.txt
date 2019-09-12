@@ -73,16 +73,28 @@ void Down(vector<vector<int> >& buf)
 }
 void Left(vector<vector<int> >& buf)
 {
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < n; ++i)
 	{
 		int left = 0;
 		int tmp = 0;
-		while (left < 3)
+		while (buf[i][tmp] == 0 && left < n)
 		{
-			if (buf[i][left] == buf[i][left+1] && buf[i][left] != 0)
+			if (buf[i][left] != 0)
 			{
-				buf[i][tmp] = buf[i][left] + buf[i][left+1];
-				buf[i][left+1] = 0;
+				buf[i][tmp] = buf[i][left];
+				buf[i][left] = 0;
+				++tmp;
+			}
+			++left;
+		}
+		left = 0; 
+		tmp = 0;
+		while (left < n - 1)
+		{
+			if (buf[i][left] == buf[i][left + 1] && buf[i][left] != 0)
+			{
+				buf[i][tmp] = buf[i][left] + buf[i][left + 1];
+				buf[i][left + 1] = 0;
 				if (tmp != left)
 					buf[i][left] = 0;
 				++tmp;
