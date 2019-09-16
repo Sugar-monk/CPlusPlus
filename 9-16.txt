@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+typedef long long T;
+
+T Cou(const T &n, const T& m, vector<pair<T, T>> arr)
+{
+	T ret = 0;
+
+	vector<T> buf(n, 0);
+	T x, y;
+
+	for (T i = m; i > 0; --i)
+	{
+		x = arr[i - 1].first;
+		y = arr[i - 1].second;
+		while (x <= y && buf[x] == 0)
+		{
+			buf[x] = i;
+			++x;
+		}
+		while (y > x && buf[y] == 0)
+		{
+			buf[y] = i;
+			--y;
+		}
+	}
+
+	for (T i = 0; i < n; ++i)
+	{
+		ret += i*buf[i];
+	}
+
+	ret %= 100000009;
+
+	return ret;
+}
+
+int main()
+{
+	long long n, m;
+
+	while (cin >> n >> m)
+	{
+		vector<pair<T, T>> arr;
+		pair<T, T> tmp;
+		for (int i = 0; i < m; ++i)
+		{
+			cin >> tmp.first >> tmp.second;
+			arr.push_back(tmp);
+		}
+
+		cout << Cou(n, m, arr) << endl;
+	}
+
+	return 0;
+}
