@@ -1,0 +1,101 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <stack>
+
+using namespace std;
+
+int StrToInt(string str)
+{
+	stringstream t(str);
+	int ret;
+
+	t >> ret;
+
+	return ret;
+}
+
+int Run(int tmp, int a, char st)
+{
+	int ret = 0;
+
+	switch (st)
+	{
+	case '+':
+		ret = a + tmp;
+		break;
+	case '-':
+		ret = tmp - a;
+		break;
+	default:
+		break;
+	}
+
+	return ret;
+}
+
+int Error(string a, char b, int line)
+{
+	int ret = line;
+	if (a.find('.') != string::npos || a.find('-') != string::npos)
+	{
+		ret += 1;
+		return ret;
+	}
+	if (b != '+' && b != '-' && b != '=')
+	{
+		ret += 1;
+		return ret;
+	}
+
+	return 0;
+}
+
+int main()
+{
+	string a;
+	char str;
+	while (cin >> a >> str)
+	{
+		int line = 0;
+
+		int ret = Error(a, str, line);
+		if (ret != 0)
+		{
+			cout << "ERROR line:" << ret;
+			continue;
+		}
+
+		line += 2;
+		stack<int> s;
+		stack<char> t;
+
+		s.push(StrToInt(a));
+		t.push(str);
+		while (cin >> a >> str)
+		{
+			int ret = Error(a, str, line);
+			if (ret != 0)
+			{
+				cout << "ERROR line:" << ret;
+				break;
+			}
+			line += 2;
+			int tmp = s.top();
+			char st = t.top();
+			s.pop();
+			t.pop();
+
+			int a1 = StrToInt(a);
+			s.push(Run(tmp, a1, st));
+			if (str == '=')
+			{
+				cout << s.top();
+				break;
+			}
+			t.push(str);
+		}
+
+	}
+	return 0;
+}
