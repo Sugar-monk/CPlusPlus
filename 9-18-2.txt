@@ -1,0 +1,60 @@
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    
+TreeNode* Create(int data)
+{
+	TreeNode* ret = new TreeNode(data);
+	ret->left = nullptr;
+	ret->right = nullptr;
+
+	return  ret;
+}
+
+TreeNode* Re(queue<int>& pre, vector<int> vin)
+{
+	if (vin.empty())
+		return nullptr;
+	if (pre.empty())
+		return nullptr;
+	int p = pre.front();
+	pre.pop();
+
+	size_t pos = 0;
+	while (pos < vin.size())
+	{
+		if (vin[pos] == p)
+			break;
+		++pos;
+	}
+
+	if (pos == vin.size())
+		return nullptr;
+
+	vector<int> left_vin(vin.begin(), vin.begin() + pos);
+	vector<int> right_vin(vin.begin() + pos+1, vin.end());
+	TreeNode* root = Create(p);
+	
+	
+	root->left = Re(pre, left_vin);
+	root->right = Re(pre, right_vin);
+
+	return root;
+}
+
+
+TreeNode* reConstructBinaryTree(vector<int> pre, vector<int> vin) {
+	queue<int> pre1;
+	for (size_t i = 0; i < pre.size(); ++i)
+		pre1.push(pre[i]);
+	return Re(pre1, vin);
+}
+};
