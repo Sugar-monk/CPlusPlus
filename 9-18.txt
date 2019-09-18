@@ -1,0 +1,103 @@
+
+#include <iostream>
+#include <string>
+#include <queue>
+#include <stack>
+
+using namespace std;
+
+typedef struct TreeNode
+{
+	string data;
+	TreeNode* left;
+	TreeNode* right;
+}TreeNode;
+
+typedef TreeNode* pNode;
+
+pNode NodeStr(string s)
+{
+	if (s == "#")
+		return nullptr;
+	else
+	{
+		pNode n = new TreeNode;
+		n->data = s;
+		n->left = nullptr;
+		n->right = nullptr;
+		return n;
+	}
+}
+
+pNode DeSer(const vector<string>& str)
+{
+	size_t index = 0;
+	pNode T = NodeStr(str[index++]);
+
+	queue<pNode> q;
+	if (T != nullptr)
+		q.push(T);
+	pNode cur;
+	while (!q.empty() && index < str.size())
+	{
+		cur = q.front();
+		q.pop();
+
+		cur->left = NodeStr(str[index]);
+		index++;
+		if (index < str.size())
+			cur->right = NodeStr(str[index]);
+		else
+			break;
+		index++;
+		if (cur->left)
+			q.push(cur->left);
+		if (cur->right)
+			q.push(cur->right);
+	}
+
+	return T;
+}
+
+void Serl(pNode root, vector<string>& str)
+{
+	stack<pNode> s;
+	vector<string> a;
+	pNode cur = root;
+
+	while (!s.empty() || cur)
+	{
+		while (cur)
+		{
+			a.push_back(cur->data);
+			s.push(cur);
+			cur = cur->left;
+		}
+		a.push_back("#");
+		if (!s.empty())
+		{
+			pNode t = s.top();
+			s.pop();
+			cur = t->right;
+		}
+	}
+	a.push_back("#");
+	str = a;
+}
+
+
+int main()
+{
+	int n;
+	while (cin >> n)
+	{
+		vector<string> str(n);
+		for (int i = 0; i < n; ++i)
+			cin >> str[i];
+		pNode T = DeSer(str);
+		Serl(T, str);
+		for (size_t i = 0; i < str.size(); ++i)
+			cout << str[i] << endl;
+
+	}
+}
