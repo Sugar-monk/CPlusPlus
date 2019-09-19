@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+static int Min(const vector<int>& buf, const size_t& k)
+{
+	if (k > buf.size())
+		return 0;
+
+	int ret = buf[0];
+	for (size_t i = 1; i < k; ++i)
+		ret += buf[i];
+	int size = buf.size();
+	bool flag = false;
+
+	for (int i = 0; (i + k) <= size; ++i)
+	{
+		int win = i + k;
+		for (int j = 0; j < size && j + win <= size; ++j)
+		{
+			int sum = 0;
+			vector<int> arr(buf.begin() + j, buf.begin() + j + win);
+			for (auto e : arr)
+				sum += e;
+
+			if (sum < ret)
+				ret = sum;
+		}
+	}
+
+	return ret;
+}
+
+int main()
+{
+	int n, k;
+
+	while (cin >> n >> k)
+	{
+		vector<int> buf(n);
+		for (int i = 0; i < n; ++i)
+		{
+			cin >> buf[i];
+		}
+
+		cout << Min(buf, k) << endl;
+	}
+	return 0;
+}
