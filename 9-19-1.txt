@@ -1,0 +1,84 @@
+
+#include <iostream>
+#include <sstream>
+#include <string>
+
+using namespace std;
+typedef int type;
+
+void IntToStr(string& str, type n)
+{
+	stringstream s;
+	s << n;
+	s >> str;
+}
+
+string mult(const string& str1, const string& str2)
+{
+	int size1 = str1.size(), size2 = str2.size();
+	string ret (size1 + size2, '0');
+
+	if (size1 == 0 || size2 == 0)
+		return " ";
+
+	for (int i = size1 - 1; i >= 0; --i)
+	{
+		int add = 0;
+		for (int j = size2 - 1; j >= 0; --j)
+		{
+			int mul = (str1[i] - '0') * (str2[j] - '0');
+			int sum = ret[i + j + 1] + add + mul % 10 - '0';
+			ret[i + j + 1] = '0' + sum % 10;
+			add = mul / 10 + sum / 10;
+		}
+
+		ret[i] += add;
+	}
+
+	for (int i = 0; i < size1 + size2; ++i)
+	{
+		if (ret[i] != '0')
+		{
+			return ret.substr(i);
+		}
+	}
+
+	return " ";
+
+}
+
+string Fun(type n)
+{
+	string ret = "1";
+	for (type i = 1; i <= n; ++i)
+	{
+		string str2;
+		IntToStr(str2, i);
+		ret = mult(ret, str2);
+	}
+
+	return  ret;
+}
+
+
+
+int main()
+{
+	int n;
+
+	while (cin >> n)
+	{
+		string str = Fun(n);
+
+		string::iterator ite = str.end()-1;
+
+		while (*ite == '0' && ite != str.begin())
+		{
+			--ite;
+		}
+
+		cout << *ite << endl;
+	}
+	
+	return 0;
+}
