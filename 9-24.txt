@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+void StrSub(const string& s, vector<string>& ret)
+{
+	size_t index = 0;
+	
+	while (index < s.size())
+	{
+		int left, right;
+		left = index;
+		right = s.rfind(s[index]);
+
+		for (int i = index + 1; i < right; ++i)
+		{
+			int tmp = s.rfind(s[i]);
+			if (tmp > right)
+				right = tmp;
+		}
+
+		
+
+		ret.push_back(s.substr(index, right - index + 1));
+		index = right + 1;
+	}
+}
+
+int main()
+{
+	string str = "aabbbacceddefgkifk";
+	vector<string> buf;
+	StrSub(str, buf);
+
+	for (const auto& e : buf)
+		cout << e << endl;
+	return 0;
+}
+
+
