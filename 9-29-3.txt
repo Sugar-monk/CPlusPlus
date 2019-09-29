@@ -1,0 +1,39 @@
+class Solution {
+public:
+
+	static bool cmp(vector<int> left, vector<int> right)
+	{
+		return left.size() > right.size();
+	}
+
+	vector<vector<int> > FindPath(TreeNode* root, int expectNumber) {
+		vector<vector<int>> ret;
+		if (root == nullptr)
+			return ret;
+
+		vector<int> path;
+		Find(ret, path, root, expectNumber);
+
+		sort(ret.begin(), ret.end(), cmp);
+        
+        return ret;
+	}
+
+	void Find(vector<vector<int> >& ret, vector<int>& path, TreeNode* root, int sum)
+	{
+		if (root == nullptr)
+			return;
+
+		path.push_back(root->val);
+		//判断是不是叶子结点
+		if (root->right == nullptr && root->left == nullptr && sum == root->val)
+			ret.push_back(path);
+		else
+		{
+			Find(ret, path, root->left, sum - root->val);
+			Find(ret, path, root->right, sum - root->val);
+		}
+
+		path.pop_back();
+	}
+};
