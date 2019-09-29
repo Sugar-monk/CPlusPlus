@@ -1,0 +1,29 @@
+class Solution {
+public:
+    bool VerifySquenceOfBST(vector<int> sequence) {
+        if(sequence.empty())
+            return false;
+        
+        return IsBST(sequence, 0, sequence.size() - 1);
+    }
+    
+    bool IsBST(const vector<int>& arr, int l, int r)
+    {
+        if(l >= r)
+            return true;
+        
+        int i = r;
+        while(i > l && arr[i-1] > arr[r])
+        {
+            --i;
+        }
+        
+        for(int j = i-1; j >= l; --j)
+        {
+            if(arr[j] > arr[r])
+                return false;
+        }
+        
+        return IsBST(arr, l, i-1) && IsBST(arr, i, r-1);
+    }
+};
