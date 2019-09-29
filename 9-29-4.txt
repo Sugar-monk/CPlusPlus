@@ -1,0 +1,38 @@
+class Solution {
+public:
+	TreeNode* Convert(TreeNode* pRootOfTree)
+	{
+		if (pRootOfTree == nullptr)
+			return  nullptr;
+
+		TreeNode* ret = nullptr;
+
+		convert(pRootOfTree, ret);
+        
+        ret = pRootOfTree;
+		while(ret->left != nullptr)
+			ret = ret->left;
+
+		return ret;
+	}
+
+	void convert(TreeNode* root, TreeNode*& pre)
+	{
+        //如果当前是空节点，要向上返回
+		if (root == nullptr)
+			return;
+        
+        //中序遍历思想，继续向左走
+		convert(root->left, pre);
+
+        //开始做双向链表的应用
+		root->left = pre;
+		if (pre != nullptr)
+			pre->right = root;
+
+		pre = root;
+
+        //继续遍历右子树
+		convert(root->right, pre);
+	}
+};
