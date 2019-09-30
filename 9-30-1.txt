@@ -1,0 +1,53 @@
+class Solution {
+public:
+	ListNode* deleteDuplication(ListNode* pHead)
+	{
+
+		if (pHead == nullptr)
+			return pHead;
+
+		ListNode* pre = nullptr;
+		ListNode* next = nullptr;
+		ListNode* cur = pHead;
+
+		while (cur != nullptr)
+		{
+			//情况一：第一个之后的重复
+			next = cur->next;
+
+			if (next != nullptr && next->val == cur->val)
+			{
+                //找出最后一个不与cur相等的节点
+				while (next != nullptr && cur->val == next->val)
+				{
+					next = next->next;
+				}
+                
+                //如果cur是头结点，直接让头结点为下一个不重复的节点
+				if (cur == pHead)
+				{
+					pHead = next;
+				}
+                //否则直接让pre的next指向这个不重复的节点
+                else
+                {
+                    pre->next = next;
+                }
+                
+                //cur继续向后走
+				cur = next;
+			}
+            
+            //如果不相等更新pre和cur
+			else
+			{
+				pre = cur;
+				cur = cur->next;
+			}
+
+		}
+        
+        return pHead;
+
+	}
+};
