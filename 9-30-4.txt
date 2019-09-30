@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int SumTree(TreeNode* root)
+	{
+		if (root == nullptr)
+			return 0;
+		return max(SumTree(root->left), SumTree(root->right))+1;
+	}
+	bool IsBalanced_Solution(TreeNode* pRoot) {
+		if (pRoot == nullptr)
+			return true;
+
+		int sub = SumTree(pRoot->right) - SumTree(pRoot->left);
+		if ( sub > 1 || sub < -1)
+			return false;
+		return IsBalanced_Solution(pRoot->left) && IsBalanced_Solution(pRoot->right);
+	}
+};
