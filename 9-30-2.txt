@@ -1,0 +1,50 @@
+type Count(vector<int>& buf, vector<int>& tmp, type left, type right)
+{
+	//如果开始和结束在同一位置，说明只剩最后一个元素了
+	if (right - left == 0)
+		return 0;
+
+	//去元素的中间节点
+	type mid = left + ((right - left) >> 1);
+
+	//统计左边的逆序对和右边的逆序对
+	type leftsum = Count(buf, tmp, left, mid);
+	type rightsum = Count(buf, tmp, mid + 1, right);
+
+	//记录交叉的逆序对
+	type ccount = 0;
+
+	type i = mid, j = right, index = right;
+
+	while (i >= left && j > mid)
+	{
+		if (buf[i] > buf[j])
+		{
+			tmp[index--] = buf[i--];
+			ccount += j - left - (mid - left);
+		}
+		else
+		{
+			tmp[index--] = buf[j--];
+		}
+	}
+
+	while (i >= left)
+		tmp[index--] = buf[i--];
+	while (j > mid)
+		tmp[index--] = buf[j--];
+
+	copy(tmp.begin() + left, tmp.begin() + right + 1, buf.begin() + left);
+
+	return (leftsum + rightsum + ccount);
+}
+
+int InversePairs(vector<int> data)
+{
+	int size = data.size();
+	if (size <= 0)
+		return 0;
+	vector<int> tmp(data);
+	type ret = Count(data, tmp, 0, size - 1);
+	return  ret % 1000000007;
+}
