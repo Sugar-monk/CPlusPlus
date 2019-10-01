@@ -1,0 +1,22 @@
+class Solution {
+public:
+    bool IsContinuous(vector<int> numbers) {
+		int size = numbers.size();
+		if (size != 5)
+			return  false;
+
+		sort(numbers.begin(), numbers.end());
+		int c = count(numbers.begin(), numbers.end(), 0);
+
+		for (int i = c; i < size-1; ++i)
+		{
+			int tmp = numbers[i + 1] - numbers[i];
+			if (tmp == 0)
+				return false;
+
+			c = c - tmp + 1;
+		}
+
+		return c >= 0;
+	}
+};
