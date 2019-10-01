@@ -1,0 +1,94 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+struct TreeNode {
+int val;
+struct TreeNode *left;
+struct TreeNode *right;
+
+TreeNode(int x)
+: val(x), left(nullptr), right(nullptr)
+{}
+};
+
+class Solution {
+public:
+	char* Serialize(TreeNode *root)
+	{
+		char* r = new char;
+		if (root == nullptr)
+			return  r;
+
+		string ret;
+		Pre(root, ret);
+
+		strcpy(r, ret.c_str());
+		return r;
+	}
+	string IntToStr(int a)
+	{
+		stringstream s;
+		s << a;
+		string ret;
+		s >> ret;
+		return  ret;
+	}
+
+	int StrToInt(string str)
+	{
+		stringstream s(str);
+		int ret;
+		s >> ret;
+		
+		return ret;
+	}
+
+	void Pre(TreeNode* root, string& ret)
+	{
+		if (root == nullptr)
+		{
+			ret += "#!";
+			return;
+		}
+		string tmp;
+		tmp = IntToStr(root->val);
+		ret += tmp + '!';
+		Pre(root->left, ret);
+		Pre(root->right, ret);
+	}
+	TreeNode* Deserialize(char *str)
+	{
+		if (str == nullptr)
+			return nullptr;
+
+		TreeNode* root = nullptr;
+		string s;
+		s = str;
+		int pos = 0;
+		return Deser(root, s, pos);
+	}
+
+	TreeNode* Deser(TreeNode* root, string str, int& pos)
+	{
+		int pos1 = str.find('!',pos);
+		string tmp = str.substr(pos, pos1 - pos);
+		if (tmp == "#")
+		{
+			pos = pos1 + 1;
+			return nullptr;
+		}
+		int val = StrToInt(tmp);
+		root = new TreeNode(val);
+		pos = pos1 + 1;
+		root->left = Deser(root->left, str, pos);
+		root->right = Deser(root->right, str, pos);
+
+		return  root;
+	}
+};
