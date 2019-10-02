@@ -1,0 +1,34 @@
+class Solution {
+    
+    vector<int> buf;
+    int size = 0;
+public:
+    
+    void Insert(int num)
+    {
+        buf.push_back(num);
+        ++size;
+    }
+
+    double GetMedian()
+    {
+        sort(buf.begin(), buf.end());
+        double ret = 0;
+        if(size == 0)
+            return ret;
+        if(size % 2 == 0)
+        {
+            int mid1 = (size >> 1);
+            int mid2 = mid1 - 1;
+            
+            ret = double((buf[mid1] + buf[mid2])/2.0);
+            return ret;
+        }
+        
+        int mid1 = (size >> 1);
+        ret = (double)buf[mid1];
+        
+        return ret;
+    }
+
+};
