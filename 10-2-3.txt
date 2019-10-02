@@ -1,0 +1,31 @@
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& T) {
+        int size = T.size();
+        vector<int> ret(size, 0);
+        for(int i = size - 2; i >= 0; --i)
+        {
+            for(int j = i+1; j < size; j += ret[j])
+            {
+                if(T[i] < T[j])
+                {
+                    ret[i] += 1;
+                    break;
+                }
+                else
+                {
+                    if(ret[j] == 0)
+                    {
+                        ret[i] = 0;
+                        break;
+                    }
+                    else
+                        ret[i] += ret[j];
+                    
+                }
+            }
+        }
+        
+        return ret;
+    }
+};
