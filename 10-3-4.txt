@@ -1,0 +1,25 @@
+class Solution {
+public:
+	string convert(string s, int numRows) {
+		vector<string> buf(min(numRows, (int)s.size()));
+		bool flag = false;
+		int pos = 0;
+		for (const auto& e : s)
+		{
+			buf[pos] += e;
+			//如果pos为0，那么就要将flag记为true，让pos向下移动
+			//如果pos为numRows-1，说明是最下面的一个，将flag记为false，让pos开始向上移动
+			if (pos == 0 || pos == numRows - 1)
+				flag = !flag;
+
+			pos += flag ? 1 : -1;
+		}
+
+		string ret;
+		for (const auto& e : buf)
+			ret += e;
+
+		return ret;
+	}
+
+};
