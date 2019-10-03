@@ -1,0 +1,17 @@
+class Solution {
+public:
+	bool uniqueOccurrences(vector<int>& arr) {
+		vector<int> tmp(arr);
+		sort(tmp.begin(), tmp.end());
+		unordered_set<int> st;
+		int c = 0;
+		for (int i = 0; i < tmp.size(); i += c)
+		{
+			c = count(tmp.begin(), tmp.end(), tmp[i]);
+			if (st.insert(c).second == false)
+				return false;
+		}
+
+		return true;
+	}
+};
