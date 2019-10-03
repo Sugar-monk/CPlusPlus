@@ -1,0 +1,111 @@
+#include <iostream>
+
+using namespace std;
+
+struct node
+{
+	int val;
+	node* next;
+	node* prev;
+};
+
+typedef node* Node;
+node* Create(int data)
+{
+	node* ret = new node;
+	ret->val = data;
+	ret->next = nullptr;
+	ret->prev = nullptr;
+
+	return ret;
+}
+
+void Init(Node* head)
+{
+	head = nullptr;
+}
+
+
+void insert(Node* head, int v)
+{
+	Node c = Create(v);
+	if (*head == nullptr)
+	{
+		*head = c;
+		return;
+	}
+
+	Node cur = *head;
+
+	while (cur->next != nullptr && cur->val < v)
+	{
+		cur = cur->next;
+	}
+
+	//说明cur是链表的最后一个节点
+	if (cur->next == nullptr)
+	{
+		if (cur->val > v)
+		{
+			Node p = cur->prev;
+			if (p == nullptr) //说明cur是链表中唯一一个节点
+			{
+				cur->prev = c;
+				c->next = cur;
+				*head = c;
+			}
+			else
+			{
+				p->next = c;
+				c->prev = p;
+				c->next = cur;
+				cur->prev = c;
+			}
+		}
+		else
+		{
+			cur->next = c;
+			c->prev = cur;
+		}
+	}
+	//说明cur的值比v大或者等于v，就要将v插入到cur之前。
+	else
+	{
+		Node p = cur->prev;
+		if (p == nullptr)
+		{
+			cur->prev = c;
+			c->next = cur;
+			*head = c;
+		}
+		else
+		{
+			p->next = c;
+			c->prev = p;
+			c->next = cur;
+			cur->prev = c;
+		}
+	}
+}
+
+void Delete(Node* head, int v)
+{
+	if (head == nullptr)
+		return;
+
+	Node cur = *head;
+	while (cur != nullptr && cur->val != v)
+	{
+		cur = cur->next;
+	}
+
+	if (cur == nullptr)
+		return;
+
+	Node p = cur->prev;
+	Node n = cur->next;
+	p->next = n;
+	n->prev = p;
+	delete cur;
+	cur = nullptr;
+}
