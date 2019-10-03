@@ -1,0 +1,50 @@
+class Solution {
+public:
+	void Init(const string& str, string& ret)
+	{
+		ret.push_back('#');
+		for (size_t i = 0; i < str.size(); ++i)
+		{
+			ret.push_back(str[i]);
+			ret.push_back('#');
+		}
+	}
+	string longestPalindrome(string s) {
+		string tmp;
+		Init(s, tmp);
+		int size = tmp.size();
+		vector<int> buf(tmp.size(), 0);
+		int pos = 0, mx = 0, len = 0, index = 0;
+
+		for (int i = 1; i < size; ++i)
+		{
+			if (i < mx)
+				buf[i] = min(mx - i, buf[2 * pos - i]);
+			else
+				buf[i] = 1;
+
+			int left = i - buf[i], right = i + buf[i];
+			while (left >= 0 && right < size && tmp[left] == tmp[right])
+			{
+				buf[i]++;
+				left = i - buf[i];
+				right = i + buf[i];
+			}
+
+			if (right > mx)
+			{
+				mx = right;
+				pos = i;
+			}
+			if (buf[i] > len)
+			{
+				index = i;
+				len = buf[i];
+			}
+		}
+		len -= 1;
+		string ret;
+		ret = s.substr(((index - len)>> 1), len);
+		return ret;
+	}
+};
