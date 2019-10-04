@@ -1,0 +1,36 @@
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+		const char* str = nullptr, *pat = nullptr;
+		str = s.c_str();
+		pat = p.c_str();
+
+		return IsMatch(str, pat);
+	}
+
+	bool IsMatch(const char* str, const char* pat)
+	{
+		if (str == nullptr || pat == nullptr)
+			return false;
+		if (*str != '\0' && *pat == '\0')
+			return false;
+		if (*str == '\0' && *pat == '\0')
+			return true;
+
+		if (*(pat + 1) == '*')
+		{
+			if (*str == *pat || *str != '\0' && *pat == '.')
+				return IsMatch(str + 1, pat) || IsMatch(str, pat + 2);
+			else
+				return IsMatch(str, pat + 2);
+		}
+		else
+		{
+			if (*str == *pat || *str != '\0' && *pat == '.')
+				return IsMatch(str + 1, pat + 1);
+		}
+
+		return false;
+
+	}
+};
