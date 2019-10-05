@@ -1,0 +1,77 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+		if (lists.empty())
+			return nullptr;
+		ListNode* cur = lists[0], *ret = nullptr;
+		if (lists.size() == 1)
+			return cur;
+		size_t i = 0;
+		int pos = i, tmp = 0;;
+		while (i < lists.size())
+		{
+			if (lists[i] != nullptr)
+			{
+				pos = i;
+				tmp = lists[i]->val;
+				break;
+			}
+			++i;
+			if (i == lists.size())
+				return nullptr;
+		}
+		while (i < lists.size())
+		{
+			if (lists[i] != nullptr && lists[i]->val <= tmp)
+			{
+				pos = i;
+                tmp = lists[i]->val;
+			}
+			++i;
+		}
+		cur = lists[pos];
+		if (lists[pos] != nullptr)
+			lists[pos] = lists[pos]->next;
+		ret = cur;
+
+		while (1)
+		{
+			bool flag = true;
+			i = 0;
+			while (i < lists.size())
+			{
+				if (lists[i] != nullptr)
+				{
+					if (flag)
+					{
+						tmp = lists[i]->val;
+						pos = i;
+						flag = false;
+					}
+					else if (lists[i]->val <= tmp)
+					{
+						pos = i;
+						tmp = lists[i]->val;
+					}
+				}
+				++i;
+			}
+			if (flag)
+				break;
+			cur->next = lists[pos];
+			cur = cur->next;
+			lists[pos] = lists[pos]->next;
+
+		}
+
+		return ret;
+	}
+};
