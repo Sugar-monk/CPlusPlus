@@ -1,0 +1,36 @@
+class Solution {
+	string IntToStr(int x)
+	{
+		stringstream s;
+		s << x;
+		string ret;
+		s >> ret;
+
+		return ret;
+	}
+
+	long long StrToInt(string s)
+	{
+		stringstream str(s);
+		long long ret;
+		str >> ret;
+
+		return ret;
+	}
+public:
+int reverse(int x) {
+		int a = 1;
+
+		string str = IntToStr(x);
+		if (x < 0)
+			std::reverse(str.begin() + 1, str.end());
+		else
+			std::reverse(str.begin(), str.end());
+
+		long long ret = StrToInt(str);
+
+		if (ret > INT_MAX  || ret < INT_MIN)
+			return 0;
+		return ret;
+	}
+};
